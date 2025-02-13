@@ -1,0 +1,6 @@
+[submodule "brooderApp/D2BrooderAlarm"]
+	path = brooderApp/D2BrooderAlarm
+	url = https://github.com/dicamtech/D2BrooderAlarm.git
+[submodule "brooderApp/D2ParamsGenerator"]
+	path = brooderApp/D2ParamsGenerator
+	url = https://github.com/dicamtech/D2ParamsGenerator.git
