@@ -355,6 +355,7 @@ class TinyGsmA7670 :  public TinyGsmA76xx<TinyGsmA7670>,
     int16_t len_requested = streamGetIntBefore(',');
     //  ^^ Requested number of data bytes (1-1460 bytes)to be read
     int16_t len_confirmed = streamGetIntBefore('\n');
+    size_t len_read = 0;
     // ^^ The data length which not read in the buffer
     for (int i = 0; i < len_requested; i++) {
       uint32_t startMillis = millis();
@@ -374,7 +375,16 @@ class TinyGsmA7670 :  public TinyGsmA76xx<TinyGsmA7670>,
              (millis() - startMillis < sockets[mux]->_timeout)) {
         TINY_GSM_YIELD();
       }
-      char c = stream.read();
+      // IH [14/2/2025]: the return value of stream.read() is an int, not a char, 
+      // so it can be -1 if there is no data available, which is not a valid char.
+      // So, we need to check if the return value is -1 before casting it to a char.
+      int c_data = stream.read();
+      if (c_data == -1) { 
+        len_read = i;
+        break;
+      }
+      char c = static_cast<char>(c_data);
+      // Serial.printf("%d -> c: %c, requested: %d, confirmed: %d, timeout: %d\n",i, c, len_requested, len_confirmed, sockets[mux]->_timeout);
 #endif
       sockets[mux]->rx.put(c);
     }
@@ -382,7 +392,7 @@ class TinyGsmA7670 :  public TinyGsmA76xx<TinyGsmA7670>,
     // sockets[mux]->sock_available = modemGetAvailable(mux);
     sockets[mux]->sock_available = len_confirmed;
     waitResponse();
-    return len_requested;
+    return len_read;
   }
 
   size_t modemGetAvailable(uint8_t mux) {
