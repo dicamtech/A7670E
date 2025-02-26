@@ -87,6 +87,27 @@ void test_AutoIndexing(void) {
   TEST_ASSERT_EQUAL_INT(4, mgr.GetParamCount());
 }
 
+void test_AutoAliasing(void){
+  TParamsMgr mgr;
+  TParam<int> owner;
+  owner.SetPID(0);  // Simulate an owner with pid = 0.
+
+  TParam<int> param1;
+  TParam<int> param2;
+  TParam<int> param3;
+
+  mgr.PushParam(&owner,  &owner, PAC_System, EPStorage::NVS, "*");
+  mgr.PushParam(&param1, &owner, PAC_Site, EPStorage::NVS, "*");
+  mgr.PushParam(&param2, &owner, PAC_Site, EPStorage::NVS, "*");
+  mgr.PushParam(&param3, &owner, PAC_Site, EPStorage::NVS, "*");
+
+  TEST_ASSERT_EQUAL_STRING(owner.descr->Classname, owner.ref.strVal.c_str());
+  TEST_ASSERT_EQUAL_STRING(param1.descr->Classname, param1.ref.strVal.c_str());
+  TEST_ASSERT_EQUAL_STRING("", param2.ref.strVal.c_str());
+  TEST_ASSERT_EQUAL_STRING("", param3.ref.strVal.c_str());
+
+}
+
 //---------------------------------------------------------------------
 // main() for native tests
 //---------------------------------------------------------------------
@@ -94,4 +115,5 @@ void test_TParamsMgr(void) {
   RUN_TEST(test_AddParamUniqueAlias);
   RUN_TEST(test_AddParamDuplicateAlias);
   RUN_TEST(test_AutoIndexing);
+  RUN_TEST(test_AutoAliasing);
 }
