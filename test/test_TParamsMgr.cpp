@@ -1,5 +1,6 @@
 #include <unity.h>
 #include "../brooderApp/D2BrooderAlarm/src/param.cpp"
+#include "../brooderApp/D2BrooderAlarm/src/common.h"
 #include "../brooderApp/D2BrooderAlarm/src/paramsmgr.h"
 #include "../brooderApp/D2BrooderAlarm/src/paramsmgr.cpp"
 #include "../brooderApp/D2ParamsGenerator/api/paramdescr.cpp"
@@ -112,6 +113,15 @@ void test_Param0(void){
   TEST_ASSERT_EQUAL_INT(0, owner.GetIdx());
 }
 
+void test_TParamsMgr_Find_NonExistent(void) {
+  TParamsMgr mgr;
+  TParam<int> none, system;
+  mgr.PushParam(&none, &none, PAC_None, EPStorage::NVS, "None");
+  mgr.PushParam(&system, &none, PAC_System, EPStorage::NVS, "System");
+  
+  int pid = mgr.Find("NonExistent");
+  TEST_ASSERT_EQUAL(UNSET_PID, pid);
+}
 
 //---------------------------------------------------------------------
 // main() for native tests
@@ -122,4 +132,5 @@ void test_TParamsMgr(void) {
   RUN_TEST(test_AutoIndexing);
   RUN_TEST(test_AutoAliasing);
   RUN_TEST(test_Param0);
+  RUN_TEST(test_TParamsMgr_Find_NonExistent);
 }
