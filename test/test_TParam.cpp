@@ -80,18 +80,6 @@ void test_uint16_param() {
   );
   TEST_ASSERT_EQUAL(0, paramUint.GetValue());
 
-  // Negative value (should fail)
-  // TEST_ASSERT_EQUAL_INT(
-  //     static_cast<int>(EPError::OutOfRange),
-  //     static_cast<int>(paramUint.SetValueFromStr("-1"))
-  // );
-
-  // Overflow value (should fail)
-  // TEST_ASSERT_EQUAL_INT(
-  //     static_cast<int>(EPError::OutOfRange),
-  //     static_cast<int>(paramUint.SetValueFromStr("70000"))
-  // );
-
   // Invalid conversion (non-numeric)
   TEST_ASSERT_EQUAL_INT(
     static_cast<int>(EPError::TypeMismatch),
