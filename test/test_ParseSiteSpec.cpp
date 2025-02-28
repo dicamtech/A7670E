@@ -24,8 +24,8 @@ void test_ParseSiteSpec_And_ParamsMgr(void) {
   TParamsMgr mgr;
   TParam<int> none, system;
   
-  mgr.PushParam(&none, &none, PAC_None, EPStorage::NVS, "None");
-  mgr.PushParam(&system, &none, PAC_System, EPStorage::NVS, "System");
+  mgr.PushParam(&none, &none, PAC_None, EPStore::NVS, "None");
+  mgr.PushParam(&system, &none, PAC_System, EPStore::NVS, "System");
   
   const std::string input = R"(!sitespec
   SysCtrl,255,System.SysCtrl.0,2
@@ -156,7 +156,7 @@ void test_ParseSiteSpec_InvalidFormat(void) {
 void test_ParseSiteSpec_Whitespace(void) {
   TParamsMgr mgr;
   TParam<int> dummy;
-  mgr.PushParam(&dummy, &dummy, PAC_None, EPStorage::NVS, "Dummy");
+  mgr.PushParam(&dummy, &dummy, PAC_None, EPStore::NVS, "Dummy");
   
   const std::string input = R"(!sitespec
   Dummy  ,   100   ,   None. None .0  ,  2   )";

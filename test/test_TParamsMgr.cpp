@@ -9,10 +9,10 @@
 void test_AddParamUniqueAlias(void) {
   TParamsMgr mgr;
   TParam<int> owner;
-  mgr.PushParam(&owner,  &owner, PAC_None, EPStorage::NVS, "");
+  mgr.PushParam(&owner,  &owner, PAC_None, EPStore::NVS, "");
 
   TParam<int> param;
-  mgr.PushParam(&param, &owner, PAC_System, EPStorage::RAM, "system");
+  mgr.PushParam(&param, &owner, PAC_System, EPStore::RAM, "system");
 
   // Verify that the parameter's pid is set to 0 (first parameter added).
   TEST_ASSERT_EQUAL_INT(1, param.GetPID());
@@ -34,17 +34,17 @@ void test_AddParamUniqueAlias(void) {
 void test_AddParamDuplicateAlias(void) {
   TParamsMgr mgr;
   TParam<int> owner;
-  mgr.PushParam(&owner,  &owner, PAC_System, EPStorage::NVS, "");
+  mgr.PushParam(&owner,  &owner, PAC_System, EPStore::NVS, "");
 
   // First parameter: add with alias "site".
   TParam<int> param1;
-  mgr.PushParam(&param1, &owner, PAC_Site, EPStorage::NVS, "site");
+  mgr.PushParam(&param1, &owner, PAC_Site, EPStore::NVS, "site");
   TEST_ASSERT_EQUAL_STRING("site", param1.GetAlias().c_str());
   TEST_ASSERT_EQUAL_INT(1, param1.GetPID());
 
   // Second parameter: try to add with the same alias.
   TParam<int> param2;
-  mgr.PushParam(&param2, &owner, PAC_Zone, EPStorage::NVS, "site");
+  mgr.PushParam(&param2, &owner, PAC_Zone, EPStore::NVS, "site");
   // Since the alias "site" already exists, the second parameter should not receive it.
   TEST_ASSERT_EQUAL_STRING("", param2.GetAlias().c_str());
   TEST_ASSERT_EQUAL_INT(2, param2.GetPID());
@@ -62,10 +62,10 @@ void test_AutoIndexing(void) {
   TParam<int> param2;
   TParam<int> param3;
 
-  mgr.PushParam(&owner,  &owner, PAC_System, EPStorage::NVS, "");
-  mgr.PushParam(&param1, &owner, PAC_Site, EPStorage::NVS, "");
-  mgr.PushParam(&param2, &owner, PAC_Site, EPStorage::NVS, "");
-  mgr.PushParam(&param3, &owner, PAC_Site, EPStorage::NVS, "");
+  mgr.PushParam(&owner,  &owner, PAC_System, EPStore::NVS, "");
+  mgr.PushParam(&param1, &owner, PAC_Site, EPStore::NVS, "");
+  mgr.PushParam(&param2, &owner, PAC_Site, EPStore::NVS, "");
+  mgr.PushParam(&param3, &owner, PAC_Site, EPStore::NVS, "");
 
   TEST_ASSERT_EQUAL_INT(0, owner.GetIdx());
   TEST_ASSERT_EQUAL_INT(0, param1.GetIdx());
@@ -89,10 +89,10 @@ void test_AutoAliasing(void){
   TParam<int> param2;
   TParam<int> param3;
 
-  mgr.PushParam(&owner,  &owner, PAC_System, EPStorage::NVS, "*");
-  mgr.PushParam(&param1, &owner, PAC_Site, EPStorage::NVS, "*");
-  mgr.PushParam(&param2, &owner, PAC_Site, EPStorage::NVS, "*");
-  mgr.PushParam(&param3, &owner, PAC_Site, EPStorage::NVS, "*");
+  mgr.PushParam(&owner,  &owner, PAC_System, EPStore::NVS, "*");
+  mgr.PushParam(&param1, &owner, PAC_Site, EPStore::NVS, "*");
+  mgr.PushParam(&param2, &owner, PAC_Site, EPStore::NVS, "*");
+  mgr.PushParam(&param3, &owner, PAC_Site, EPStore::NVS, "*");
 
   TEST_ASSERT_EQUAL_STRING(owner.GetDescr()->Classname, owner.GetAlias().c_str());
   TEST_ASSERT_EQUAL_STRING(param1.GetDescr()->Classname, param1.GetAlias().c_str());
@@ -105,7 +105,7 @@ void test_Param0(void){
   TParamsMgr mgr;
   TParam<int> owner;
 
-  mgr.PushParam(&owner,  &owner, PAC_System, EPStorage::NVS, "*");
+  mgr.PushParam(&owner,  &owner, PAC_System, EPStore::NVS, "*");
 
   // The owner pid should be auto assigned to 0 
   TEST_ASSERT_EQUAL_INT(0, owner.GetPID());
@@ -113,15 +113,32 @@ void test_Param0(void){
   TEST_ASSERT_EQUAL_INT(0, owner.GetIdx());
 }
 
-void test_TParamsMgr_Find_NonExistent(void) {
+void test_Find_NonExistent(void) {
   TParamsMgr mgr;
   TParam<int> none, system;
-  mgr.PushParam(&none, &none, PAC_None, EPStorage::NVS, "None");
-  mgr.PushParam(&system, &none, PAC_System, EPStorage::NVS, "System");
+  mgr.PushParam(&none, &none, PAC_None, EPStore::NVS, "None");
+  mgr.PushParam(&system, &none, PAC_System, EPStore::NVS, "System");
   
   int pid = mgr.Find("NonExistent");
   TEST_ASSERT_EQUAL(UNSET_PID, pid);
 }
+
+void test_InitDefaultValue(void) {
+  TParamsMgr mgr;
+  TParam<int> none, system, siteID, outputMax, softwareVersion;
+  mgr.PushParam(&none, &none, PAC_None, EPStore::NVS, "None");
+  mgr.PushParam(&system, &none, PAC_System, EPStore::NVS, "System");
+  mgr.PushParam(&siteID, &system, PAC_SiteID, EPStore::NVS, "*");
+  mgr.PushParam(&outputMax, &system, PAC_OutputMax, EPStore::NVS, "*");
+  mgr.PushParam(&softwareVersion, &system, PAC_SoftwareVersion, EPStore::NVS, "*");
+  
+  TEST_ASSERT_EQUAL(0, none.GetValue());
+  TEST_ASSERT_EQUAL(0, system.GetValue());
+  TEST_ASSERT_EQUAL(-1, siteID.GetValue());
+  TEST_ASSERT_EQUAL(100, outputMax.GetValue());
+  TEST_ASSERT_EQUAL(-1, softwareVersion.GetValue());
+}
+
 
 //---------------------------------------------------------------------
 // main() for native tests
@@ -132,5 +149,6 @@ void test_TParamsMgr(void) {
   RUN_TEST(test_AutoIndexing);
   RUN_TEST(test_AutoAliasing);
   RUN_TEST(test_Param0);
-  RUN_TEST(test_TParamsMgr_Find_NonExistent);
+  RUN_TEST(test_Find_NonExistent);
+  RUN_TEST(test_InitDefaultValue);
 }
