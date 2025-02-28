@@ -2,7 +2,7 @@
 #include "../brooderApp/D2BrooderAlarm/src/param.h"
 #include "../brooderApp/D2BrooderAlarm/src/param.cpp"
 
-void test_int_param() {
+void test_Param_int() {
   TParam<int32_t> paramInt(0);
 
   // Valid positive conversion
@@ -45,7 +45,7 @@ void test_int_param() {
   );
 }
 
-void test_string_param() {
+void test_Param_string() {
   TParam<std::string> paramStr("default");
 
   // Valid string conversion
@@ -63,7 +63,7 @@ void test_string_param() {
   TEST_ASSERT_EQUAL_STRING("", paramStr.GetValue().c_str());
 }
 
-void test_uint16_param() {
+void test_Param_uint16() {
   TParam<uint16_t> paramUint(0);
 
   // Valid positive conversion
@@ -87,7 +87,7 @@ void test_uint16_param() {
   );
 }
 
-void test_to_string(){
+void test_Param_to_string(){
   TParam<uint16_t> paramUint(777);
   TEST_ASSERT_EQUAL_STRING("777", paramUint.ToString().c_str());
 
@@ -102,8 +102,8 @@ void test_to_string(){
 // main() for native tests
 //---------------------------------------------------------------------
 void test_TParam(void) {
-  RUN_TEST(test_int_param);
-  RUN_TEST(test_string_param);
-  RUN_TEST(test_uint16_param);
-  RUN_TEST(test_to_string);
+  RUN_TEST(test_Param_int);
+  RUN_TEST(test_Param_string);
+  RUN_TEST(test_Param_uint16);
+  RUN_TEST(test_Param_to_string);
 }

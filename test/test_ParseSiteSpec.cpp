@@ -20,7 +20,7 @@
  * - Checks that the reference of the second parsed specification matches the none parameter.
  * - Validates the third parsed specification against expected values.
  */
-void test_ParseSiteSpec_And_ParamsMgr(void) {
+void test_ParseSiteSpec_WithValidInput(void) {
   TParamsMgr mgr;
   TParam<int> none, system;
   
@@ -80,7 +80,7 @@ void test_ParseSiteSpec_And_ParamsMgr(void) {
  * The test uses the TEST_ASSERT_EQUAL macro to check that the size of the
  * returned vector is zero in both cases.
  */
-void test_ParseSiteSpec_EmptyInput(void) {
+void test_ParseSiteSpec_WithEmptyInput(void) {
   TParamsMgr mgr;
   const std::string input = "";
   auto specs = ParseSiteSpec(input, mgr);
@@ -113,7 +113,7 @@ void test_ParseSiteSpec_EmptyInput(void) {
  * @note The expected behavior is that only one valid line ("Proper,123,Valid.Format.0,1")
  *       should be processed.
  */
-void test_ParseSiteSpec_InvalidFormat(void) {
+void test_ParseSiteSpec_WithInvalidFormat(void) {
   TParamsMgr mgr;
   const std::string input = R"(!sitespec
   InvalidLine
@@ -153,7 +153,7 @@ void test_ParseSiteSpec_InvalidFormat(void) {
  * - The class name should be "None".
  * - The status should be 2.
  */
-void test_ParseSiteSpec_Whitespace(void) {
+void test_ParseSiteSpec_WithWhitespace(void) {
   TParamsMgr mgr;
   TParam<int> dummy;
   mgr.PushParam(&dummy, &dummy, PAC_None, EPStore::NVS, "Dummy");
@@ -172,8 +172,8 @@ void test_ParseSiteSpec_Whitespace(void) {
 }
 
 void test_SiteSpec(void) {
-  RUN_TEST(test_ParseSiteSpec_And_ParamsMgr);
-  RUN_TEST(test_ParseSiteSpec_EmptyInput);
-  RUN_TEST(test_ParseSiteSpec_InvalidFormat);
-  RUN_TEST(test_ParseSiteSpec_Whitespace);
+  RUN_TEST(test_ParseSiteSpec_WithValidInput);
+  RUN_TEST(test_ParseSiteSpec_WithEmptyInput);
+  RUN_TEST(test_ParseSiteSpec_WithInvalidFormat);
+  RUN_TEST(test_ParseSiteSpec_WithWhitespace);
 }

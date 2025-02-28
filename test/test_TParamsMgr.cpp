@@ -6,7 +6,7 @@
 #include "../brooderApp/D2ParamsGenerator/api/paramdescr.cpp"
 
 // Test that a unique alias is correctly assigned and fields are set.
-void test_AddParamUniqueAlias(void) {
+void test_ParamsMgr_UniqueAlias(void) {
   TParamsMgr mgr;
   TParam<int> owner;
   mgr.PushParam(&owner,  &owner, PAC_None, EPStore::NVS, "");
@@ -31,7 +31,7 @@ void test_AddParamUniqueAlias(void) {
 }
 
 // Test that a duplicate alias is not assigned to the second parameter.
-void test_AddParamDuplicateAlias(void) {
+void test_ParamsMgr_SameAlias(void) {
   TParamsMgr mgr;
   TParam<int> owner;
   mgr.PushParam(&owner,  &owner, PAC_System, EPStore::NVS, "");
@@ -54,7 +54,7 @@ void test_AddParamDuplicateAlias(void) {
 }
 
 // Test that a duplicate alias is not assigned to the second parameter.
-void test_AutoIndexing(void) {
+void test_ParamsMgr_AutoIndexing(void) {
   TParamsMgr mgr;
   TParam<int> owner;
 
@@ -81,7 +81,7 @@ void test_AutoIndexing(void) {
   TEST_ASSERT_EQUAL_INT(4, mgr.GetParamCount());
 }
 
-void test_AutoAliasing(void){
+void test_ParamsMgr_AutoAliasing(void){
   TParamsMgr mgr;
   TParam<int> owner;
 
@@ -101,7 +101,7 @@ void test_AutoAliasing(void){
 
 }
 
-void test_Param0(void){
+void test_ParamsMgr_InitParamPID(void){
   TParamsMgr mgr;
   TParam<int> owner;
 
@@ -113,7 +113,7 @@ void test_Param0(void){
   TEST_ASSERT_EQUAL_INT(0, owner.GetIdx());
 }
 
-void test_Find_NonExistent(void) {
+void test_ParamsMgr_NonExistent(void) {
   TParamsMgr mgr;
   TParam<int> none, system;
   mgr.PushParam(&none, &none, PAC_None, EPStore::NVS, "None");
@@ -123,7 +123,7 @@ void test_Find_NonExistent(void) {
   TEST_ASSERT_EQUAL(UNSET_PID, pid);
 }
 
-void test_InitDefaultValue(void) {
+void test_ParamsMgr_InitDefault(void) {
   TParamsMgr mgr;
   TParam<int> none, system, siteID, outputMax, softwareVersion;
   mgr.PushParam(&none, &none, PAC_None, EPStore::NVS, "None");
@@ -144,11 +144,11 @@ void test_InitDefaultValue(void) {
 // main() for native tests
 //---------------------------------------------------------------------
 void test_TParamsMgr(void) {
-  RUN_TEST(test_AddParamUniqueAlias);
-  RUN_TEST(test_AddParamDuplicateAlias);
-  RUN_TEST(test_AutoIndexing);
-  RUN_TEST(test_AutoAliasing);
-  RUN_TEST(test_Param0);
-  RUN_TEST(test_Find_NonExistent);
-  RUN_TEST(test_InitDefaultValue);
+  RUN_TEST(test_ParamsMgr_UniqueAlias);
+  RUN_TEST(test_ParamsMgr_SameAlias);
+  RUN_TEST(test_ParamsMgr_AutoIndexing);
+  RUN_TEST(test_ParamsMgr_AutoAliasing);
+  RUN_TEST(test_ParamsMgr_InitParamPID);
+  RUN_TEST(test_ParamsMgr_NonExistent);
+  RUN_TEST(test_ParamsMgr_InitDefault);
 }
