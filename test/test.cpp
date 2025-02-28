@@ -8,8 +8,8 @@ extern void test_TParam();
 #ifdef UNIT_TEST
 int main(void) {
   UNITY_BEGIN();
-  test_TParamsMgr();  // Call tests defined in test_TParamsMgr.cpp
   test_TParam();      // Call tests defined in test_TParam.cpp
+  test_TParamsMgr();  // Call tests defined in test_TParamsMgr.cpp
   test_SiteSpec();
   return UNITY_END();
 }
