@@ -139,6 +139,41 @@ void test_ParamsMgr_InitDefault(void) {
   TEST_ASSERT_EQUAL(-1, softwareVersion.GetValue());
 }
 
+void test_ParamsMgr_GetChanges(void) {
+  TParamsMgr mgr;
+  TParam<int> none, system, siteID, outputMax, softwareVersion;
+  mgr.PushParam(&none, &none, PAC_None, EPStore::NVS, "None");
+  mgr.PushParam(&system, &none, PAC_System, EPStore::NVS, "System");
+  mgr.PushParam(&siteID, &system, PAC_SiteID, EPStore::NVS, "*");
+  mgr.PushParam(&outputMax, &system, PAC_OutputMax, EPStore::NVS, "*");
+  mgr.PushParam(&softwareVersion, &system, PAC_SoftwareVersion, EPStore::NVS, "*");
+
+  // we set to true to farce the value to be changed because some parameters are not settable!! 
+  none.SetValue(1, true);
+  system.SetValue(1, true);
+  siteID.SetValue(1, true);
+  outputMax.SetValue(1, true);
+  softwareVersion.SetValue(1, true);
+
+  std::bitset<5> bits;
+  std::string changes;
+  mgr.GetChanges(changes, bits);
+
+  TEST_ASSERT_EQUAL_STRING("0:1\n1:1\n2:1\n3:1\n4:1\n", changes.c_str());
+  TEST_ASSERT_EQUAL(true, bits.test(0));
+  TEST_ASSERT_EQUAL(true, bits.test(1));
+  TEST_ASSERT_EQUAL(true, bits.test(2));
+  TEST_ASSERT_EQUAL(true, bits.test(3));
+  TEST_ASSERT_EQUAL(true, bits.test(4));
+
+  mgr.ClearChanges(bits);
+  TEST_ASSERT_EQUAL(false, bits.test(0));
+  TEST_ASSERT_EQUAL(false, bits.test(1));
+  TEST_ASSERT_EQUAL(false, bits.test(2));
+  TEST_ASSERT_EQUAL(false, bits.test(3));
+  TEST_ASSERT_EQUAL(false, bits.test(4));
+}
+
 
 //---------------------------------------------------------------------
 // main() for native tests
@@ -151,4 +186,5 @@ void test_TParamsMgr(void) {
   RUN_TEST(test_ParamsMgr_InitParamPID);
   RUN_TEST(test_ParamsMgr_NonExistent);
   RUN_TEST(test_ParamsMgr_InitDefault);
+  RUN_TEST(test_ParamsMgr_GetChanges);
 }

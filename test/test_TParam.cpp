@@ -89,13 +89,13 @@ void test_Param_uint16() {
 
 void test_Param_to_string(){
   TParam<uint16_t> paramUint(777);
-  TEST_ASSERT_EQUAL_STRING("777", paramUint.ToString().c_str());
+  TEST_ASSERT_EQUAL_STRING("777", paramUint.GetValAsStr().c_str());
 
   TParam<std::string> paramStr("Dicam ltd");
-  TEST_ASSERT_EQUAL_STRING("Dicam ltd", paramStr.ToString().c_str());
+  TEST_ASSERT_EQUAL_STRING("Dicam ltd", paramStr.GetValAsStr().c_str());
 
   TParam<int16_t> paramInt(-777);
-  TEST_ASSERT_EQUAL_STRING("-777", paramInt.ToString().c_str());
+  TEST_ASSERT_EQUAL_STRING("-777", paramInt.GetValAsStr().c_str());
 }
 
 //---------------------------------------------------------------------
