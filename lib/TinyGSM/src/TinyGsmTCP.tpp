@@ -17,7 +17,7 @@
 
 #if !defined(TINY_GSM_RX_BUFFER)
 #if defined(ARDUINO_ARCH_ESP32) || defined(ESP32)
-#define TINY_GSM_RX_BUFFER 2048
+#define TINY_GSM_RX_BUFFER 1024
 #else
 #define TINY_GSM_RX_BUFFER 64
 #endif
