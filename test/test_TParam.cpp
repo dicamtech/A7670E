@@ -1,9 +1,9 @@
 #include <unity.h>
 #include "../brooderApp/D2BrooderAlarm/src/param.h"
-#include "../brooderApp/D2BrooderAlarm/src/param.cpp"
 
 void test_Param_int() {
-  TParam<int32_t> paramInt(0);
+  TParam<int32_t> paramInt;
+  paramInt.SetDescr(&paramdescr[PAC_Output]); // allow rw access
 
   // Valid positive conversion
   TEST_ASSERT_EQUAL_INT(
@@ -47,6 +47,7 @@ void test_Param_int() {
 
 void test_Param_string() {
   TParam<std::string> paramStr("default");
+  paramStr.SetDescr(&paramdescr[PAC_Reference]);  // allow rw access
 
   // Valid string conversion
   TEST_ASSERT_EQUAL_INT(
@@ -65,6 +66,7 @@ void test_Param_string() {
 
 void test_Param_uint16() {
   TParam<uint16_t> paramUint(0);
+  paramUint.SetDescr(&paramdescr[PAC_Output]); // allow rw access
 
   // Valid positive conversion
   TEST_ASSERT_EQUAL_INT(

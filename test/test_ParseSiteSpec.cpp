@@ -1,5 +1,4 @@
 #include <unity.h>
-#include "../brooderApp/D2BrooderAlarm/src/param.cpp"
 #include "../brooderApp/D2BrooderAlarm/src/sitespec.h"
 
 //---------------------------------------------------------------------
@@ -24,8 +23,8 @@ void test_ParseSiteSpec_WithValidInput(void) {
   TParamsMgr mgr;
   TParam<int> none, system;
   
-  mgr.PushParam(&none, &none, PAC_None, EPStore::NVS, "None");
-  mgr.PushParam(&system, &none, PAC_System, EPStore::NVS, "System");
+  mgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
+  mgr.PushParam(system, none, PAC_System, EPStore::NVS, "System");
   
   const std::string input = R"(!sitespec
   SysCtrl,255,System.SysCtrl.0,2
@@ -50,7 +49,7 @@ void test_ParseSiteSpec_WithValidInput(void) {
   TEST_ASSERT_EQUAL_STRING(system.GetAlias().c_str(), specs[0].pid_alias.c_str());
   
   // Verify that mgr.Find returns the same id as system's id.
-  auto pid = mgr.Find(specs[0].pid_alias);
+  auto pid = mgr.FindPidFromAlias(specs[0].pid_alias);
   TEST_ASSERT_EQUAL(system.GetPID(), pid);
   
   // Verify that the second spec ("None,,None.None.0,0") has a matching reference.
@@ -156,7 +155,7 @@ void test_ParseSiteSpec_WithInvalidFormat(void) {
 void test_ParseSiteSpec_WithWhitespace(void) {
   TParamsMgr mgr;
   TParam<int> dummy;
-  mgr.PushParam(&dummy, &dummy, PAC_None, EPStore::NVS, "Dummy");
+  mgr.PushParam(dummy, dummy, PAC_None, EPStore::NVS, "Dummy");
   
   const std::string input = R"(!sitespec
   Dummy  ,   100   ,   None. None .0  ,  2   )";
