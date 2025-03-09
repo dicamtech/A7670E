@@ -6,6 +6,7 @@
 
 // Test that a unique alias is correctly assigned and fields are set.
 void test_ParamsMgr_UniqueAlias(void) {
+  AppMapMgr.Reset();
   TParamsMgr mgr;
   TParam<int> owner;
   mgr.PushParam(owner,  owner, PAC_None, EPStore::NVS, "");
@@ -31,6 +32,7 @@ void test_ParamsMgr_UniqueAlias(void) {
 
 // Test that a duplicate alias is not assigned to the second parameter.
 void test_ParamsMgr_SameAlias(void) {
+  AppMapMgr.Reset();
   TParamsMgr mgr;
   TParam<int> owner;
   mgr.PushParam(owner,  owner, PAC_System, EPStore::NVS, "");
@@ -54,6 +56,7 @@ void test_ParamsMgr_SameAlias(void) {
 
 // Test that a duplicate alias is not assigned to the second parameter.
 void test_ParamsMgr_AutoIndexing(void) {
+  AppMapMgr.Reset();
   TParamsMgr mgr;
   TParam<int> owner;
 
@@ -81,6 +84,7 @@ void test_ParamsMgr_AutoIndexing(void) {
 }
 
 void test_ParamsMgr_AutoAliasing(void){
+  AppMapMgr.Reset();
   TParamsMgr mgr;
   TParam<int> owner;
 
@@ -101,6 +105,7 @@ void test_ParamsMgr_AutoAliasing(void){
 }
 
 void test_ParamsMgr_InitParamPID(void){
+  AppMapMgr.Reset();
   TParamsMgr mgr;
   TParam<int> owner;
 
@@ -113,6 +118,7 @@ void test_ParamsMgr_InitParamPID(void){
 }
 
 void test_ParamsMgr_NonExistent(void) {
+  AppMapMgr.Reset();
   TParamsMgr mgr;
   TParam<int> none, system;
   mgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
@@ -123,6 +129,7 @@ void test_ParamsMgr_NonExistent(void) {
 }
 
 void test_ParamsMgr_InitDefault(void) {
+  AppMapMgr.Reset();
   TParamsMgr mgr;
   TParam<int> none, system, siteID, outputMax, softwareVersion;
   mgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
@@ -139,6 +146,7 @@ void test_ParamsMgr_InitDefault(void) {
 }
 
 void test_ParamsMgr_GetChanges(void) {
+  AppMapMgr.Reset();
   TParamsMgr mgr;
   TParam<int> none, system, siteID, outputMax, softwareVersion;
   mgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
@@ -171,6 +179,8 @@ void test_ParamsMgr_GetChanges(void) {
   TEST_ASSERT_EQUAL(false, bits.test(2));
   TEST_ASSERT_EQUAL(false, bits.test(3));
   TEST_ASSERT_EQUAL(false, bits.test(4));
+
+  AppMapMgr.Dump("brooderApp/D2BrooderAlarm/appmapTest/appmap.csv");
 }
 
 
