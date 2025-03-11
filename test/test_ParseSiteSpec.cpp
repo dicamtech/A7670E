@@ -1,5 +1,5 @@
 #include <unity.h>
-#include "../brooderApp/D2BrooderAlarm/src/sitespec.h"
+#include "../brooderApp/D2BrooderAlarm/src/paramsmgr.h"
 
 //---------------------------------------------------------------------
 // Test 1: Comprehensive test combining ParseSiteSpec and TParamsMgr.
@@ -20,11 +20,11 @@
  * - Validates the third parsed specification against expected values.
  */
 void test_ParseSiteSpec_WithValidInput(void) {
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   TParam<int> none, system;
   
-  mgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
-  mgr.PushParam(system, none, PAC_System, EPStore::NVS, "System");
+  ParamsMgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
+  ParamsMgr.PushParam(system, none, PAC_System, EPStore::NVS, "System");
   
   const std::string input = R"(!sitespec
   SysCtrl,255,System.SysCtrl.0,2
@@ -36,7 +36,7 @@ void test_ParseSiteSpec_WithValidInput(void) {
   NumRuuviTags,60,System.SiteOptions.2,2
   NumUsers,10,System.SiteOptions.3,2)";
   
-  std::vector<TSiteSpec> specs = ParseSiteSpec(input, mgr);
+  std::vector<TSiteSpec> specs = ParamsMgr.ParseSiteSpec(input);
   TEST_ASSERT_EQUAL(8, (int)specs.size());
   
   // Validate first spec: "SysCtrl,255,System.SysCtrl.0,2"
@@ -49,7 +49,7 @@ void test_ParseSiteSpec_WithValidInput(void) {
   TEST_ASSERT_EQUAL_STRING(system.GetAlias().c_str(), specs[0].pid_alias.c_str());
   
   // Verify that mgr.Find returns the same id as system's id.
-  auto pid = mgr.FindPidFromAlias(specs[0].pid_alias);
+  auto pid = ParamsMgr.FindPidFromAlias(specs[0].pid_alias);
   TEST_ASSERT_EQUAL(system.GetPID(), pid);
   
   // Verify that the second spec ("None,,None.None.0,0") has a matching reference.
@@ -80,14 +80,14 @@ void test_ParseSiteSpec_WithValidInput(void) {
  * returned vector is zero in both cases.
  */
 void test_ParseSiteSpec_WithEmptyInput(void) {
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   const std::string input = "";
-  auto specs = ParseSiteSpec(input, mgr);
+  auto specs = ParamsMgr.ParseSiteSpec(input);
   TEST_ASSERT_EQUAL(0, (int)specs.size());
   
   // Header-only input.
   const std::string inputHeaderOnly = "!sitespec\n";
-  specs = ParseSiteSpec(inputHeaderOnly, mgr);
+  specs = ParamsMgr.ParseSiteSpec(inputHeaderOnly);
   TEST_ASSERT_EQUAL(0, (int)specs.size());
 }
 
@@ -113,14 +113,14 @@ void test_ParseSiteSpec_WithEmptyInput(void) {
  *       should be processed.
  */
 void test_ParseSiteSpec_WithInvalidFormat(void) {
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   const std::string input = R"(!sitespec
   InvalidLine
   Only,Two
   Three,123,TooFew,Extra,Token
   Proper,123,Valid.Format.0,1)";
   
-  auto specs = ParseSiteSpec(input, mgr);
+  auto specs = ParamsMgr.ParseSiteSpec(input);
   // Only one valid line ("Proper,123,Valid.Format.0,1") should be processed.
   TEST_ASSERT_EQUAL(1, (int)specs.size());
   
@@ -153,14 +153,14 @@ void test_ParseSiteSpec_WithInvalidFormat(void) {
  * - The status should be 2.
  */
 void test_ParseSiteSpec_WithWhitespace(void) {
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   TParam<int> dummy;
-  mgr.PushParam(dummy, dummy, PAC_None, EPStore::NVS, "Dummy");
+  ParamsMgr.PushParam(dummy, dummy, PAC_None, EPStore::NVS, "Dummy");
   
   const std::string input = R"(!sitespec
   Dummy  ,   100   ,   None. None .0  ,  2   )";
   
-  auto specs = ParseSiteSpec(input, mgr);
+  auto specs = ParamsMgr.ParseSiteSpec(input);
   TEST_ASSERT_EQUAL(1, (int)specs.size());
   
   TEST_ASSERT_EQUAL_STRING("Dummy", specs[0].ref.strVal.c_str());

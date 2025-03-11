@@ -7,12 +7,12 @@
 // Test that a unique alias is correctly assigned and fields are set.
 void test_ParamsMgr_UniqueAlias(void) {
   AppMapMgr.Reset();
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   TParam<int> owner;
-  mgr.PushParam(owner,  owner, PAC_None, EPStore::NVS, "");
+  ParamsMgr.PushParam(owner,  owner, PAC_None, EPStore::NVS, "");
 
   TParam<int> param;
-  mgr.PushParam(param, owner, PAC_System, EPStore::RAM, "system");
+  ParamsMgr.PushParam(param, owner, PAC_System, EPStore::RAM, "system");
 
   // Verify that the parameter's pid is set to 0 (first parameter added).
   TEST_ASSERT_EQUAL_INT(1, param.GetPID());
@@ -27,47 +27,47 @@ void test_ParamsMgr_UniqueAlias(void) {
   TEST_ASSERT_NOT_NULL(param.GetDescr());
   TEST_ASSERT_EQUAL_STRING("System", param.GetDescr()->Classname);
   // Verify that the manager reports one parameter.
-  TEST_ASSERT_EQUAL_INT(2, mgr.GetParamCount());
+  TEST_ASSERT_EQUAL_INT(2, ParamsMgr.GetParamCount());
 }
 
 // Test that a duplicate alias is not assigned to the second parameter.
 void test_ParamsMgr_SameAlias(void) {
   AppMapMgr.Reset();
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   TParam<int> owner;
-  mgr.PushParam(owner,  owner, PAC_System, EPStore::NVS, "");
+  ParamsMgr.PushParam(owner,  owner, PAC_System, EPStore::NVS, "");
 
   // First parameter: add with alias "site".
   TParam<int> param1;
-  mgr.PushParam(param1, owner, PAC_Site, EPStore::NVS, "site");
+  ParamsMgr.PushParam(param1, owner, PAC_Site, EPStore::NVS, "site");
   TEST_ASSERT_EQUAL_STRING("site", param1.GetAlias().c_str());
   TEST_ASSERT_EQUAL_INT(1, param1.GetPID());
 
   // Second parameter: try to add with the same alias.
   TParam<int> param2;
-  mgr.PushParam(param2, owner, PAC_Zone, EPStore::NVS, "site");
+  ParamsMgr.PushParam(param2, owner, PAC_Zone, EPStore::NVS, "site");
   // Since the alias "site" already exists, the second parameter should not receive it.
   TEST_ASSERT_EQUAL_STRING("", param2.GetAlias().c_str());
   TEST_ASSERT_EQUAL_INT(2, param2.GetPID());
 
   // Verify that the manager now holds two parameters.
-  TEST_ASSERT_EQUAL_INT(3, mgr.GetParamCount());
+  TEST_ASSERT_EQUAL_INT(3, ParamsMgr.GetParamCount());
 }
 
 // Test that a duplicate alias is not assigned to the second parameter.
 void test_ParamsMgr_AutoIndexing(void) {
   AppMapMgr.Reset();
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   TParam<int> owner;
 
   TParam<int> param1;
   TParam<int> param2;
   TParam<int> param3;
 
-  mgr.PushParam(owner,  owner, PAC_System, EPStore::NVS, "");
-  mgr.PushParam(param1, owner, PAC_Site, EPStore::NVS, "");
-  mgr.PushParam(param2, owner, PAC_Site, EPStore::NVS, "");
-  mgr.PushParam(param3, owner, PAC_Site, EPStore::NVS, "");
+  ParamsMgr.PushParam(owner,  owner, PAC_System, EPStore::NVS, "");
+  ParamsMgr.PushParam(param1, owner, PAC_Site, EPStore::NVS, "");
+  ParamsMgr.PushParam(param2, owner, PAC_Site, EPStore::NVS, "");
+  ParamsMgr.PushParam(param3, owner, PAC_Site, EPStore::NVS, "");
 
   TEST_ASSERT_EQUAL_INT(0, owner.GetIdx());
   TEST_ASSERT_EQUAL_INT(0, param1.GetIdx());
@@ -80,22 +80,22 @@ void test_ParamsMgr_AutoIndexing(void) {
   TEST_ASSERT_EQUAL_INT(3, param3.GetPID());
 
   // Verify that the manager now holds two parameters.
-  TEST_ASSERT_EQUAL_INT(4, mgr.GetParamCount());
+  TEST_ASSERT_EQUAL_INT(4, ParamsMgr.GetParamCount());
 }
 
 void test_ParamsMgr_AutoAliasing(void){
   AppMapMgr.Reset();
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   TParam<int> owner;
 
   TParam<int> param1;
   TParam<int> param2;
   TParam<int> param3;
 
-  mgr.PushParam(owner,  owner, PAC_System, EPStore::NVS, "*");
-  mgr.PushParam(param1, owner, PAC_Site, EPStore::NVS, "*");
-  mgr.PushParam(param2, owner, PAC_Site, EPStore::NVS, "*");
-  mgr.PushParam(param3, owner, PAC_Site, EPStore::NVS, "*");
+  ParamsMgr.PushParam(owner,  owner, PAC_System, EPStore::NVS, "*");
+  ParamsMgr.PushParam(param1, owner, PAC_Site, EPStore::NVS, "*");
+  ParamsMgr.PushParam(param2, owner, PAC_Site, EPStore::NVS, "*");
+  ParamsMgr.PushParam(param3, owner, PAC_Site, EPStore::NVS, "*");
 
   TEST_ASSERT_EQUAL_STRING(owner.GetDescr()->Classname, owner.GetAlias().c_str());
   TEST_ASSERT_EQUAL_STRING(param1.GetDescr()->Classname, param1.GetAlias().c_str());
@@ -106,10 +106,10 @@ void test_ParamsMgr_AutoAliasing(void){
 
 void test_ParamsMgr_InitParamPID(void){
   AppMapMgr.Reset();
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   TParam<int> owner;
 
-  mgr.PushParam(owner,  owner, PAC_System, EPStore::NVS, "*");
+  ParamsMgr.PushParam(owner,  owner, PAC_System, EPStore::NVS, "*");
 
   // The owner pid should be auto assigned to 0 
   TEST_ASSERT_EQUAL_INT(0, owner.GetPID());
@@ -119,24 +119,24 @@ void test_ParamsMgr_InitParamPID(void){
 
 void test_ParamsMgr_NonExistent(void) {
   AppMapMgr.Reset();
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   TParam<int> none, system;
-  mgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
-  mgr.PushParam(system, none, PAC_System, EPStore::NVS, "System");
+  ParamsMgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
+  ParamsMgr.PushParam(system, none, PAC_System, EPStore::NVS, "System");
   
-  int pid = mgr.FindPidFromAlias("NonExistent");
+  int pid = ParamsMgr.FindPidFromAlias("NonExistent");
   TEST_ASSERT_EQUAL(UNSET_PID, pid);
 }
 
 void test_ParamsMgr_InitDefault(void) {
   AppMapMgr.Reset();
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   TParam<int> none, system, siteID, outputMax, softwareVersion;
-  mgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
-  mgr.PushParam(system, none, PAC_System, EPStore::NVS, "System");
-  mgr.PushParam(siteID, system, PAC_SiteID, EPStore::NVS, "*");
-  mgr.PushParam(outputMax, system, PAC_OutputMax, EPStore::NVS, "*");
-  mgr.PushParam(softwareVersion, system, PAC_SoftwareVersion, EPStore::NVS, "*");
+  ParamsMgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
+  ParamsMgr.PushParam(system, none, PAC_System, EPStore::NVS, "System");
+  ParamsMgr.PushParam(siteID, system, PAC_SiteID, EPStore::NVS, "*");
+  ParamsMgr.PushParam(outputMax, system, PAC_OutputMax, EPStore::NVS, "*");
+  ParamsMgr.PushParam(softwareVersion, system, PAC_SoftwareVersion, EPStore::NVS, "*");
   
   TEST_ASSERT_EQUAL(0, none.GetValue());
   TEST_ASSERT_EQUAL(0, system.GetValue());
@@ -147,13 +147,13 @@ void test_ParamsMgr_InitDefault(void) {
 
 void test_ParamsMgr_GetChanges(void) {
   AppMapMgr.Reset();
-  TParamsMgr mgr;
+  ParamsMgr.Reset();
   TParam<int> none, system, siteID, outputMax, softwareVersion;
-  mgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
-  mgr.PushParam(system, none, PAC_System, EPStore::NVS, "System");
-  mgr.PushParam(siteID, system, PAC_SiteID, EPStore::NVS, "*");
-  mgr.PushParam(outputMax, system, PAC_OutputMax, EPStore::NVS, "*");
-  mgr.PushParam(softwareVersion, system, PAC_SoftwareVersion, EPStore::NVS, "*");
+  ParamsMgr.PushParam(none, none, PAC_None, EPStore::NVS, "None");
+  ParamsMgr.PushParam(system, none, PAC_System, EPStore::NVS, "System");
+  ParamsMgr.PushParam(siteID, system, PAC_SiteID, EPStore::NVS, "*");
+  ParamsMgr.PushParam(outputMax, system, PAC_OutputMax, EPStore::NVS, "*");
+  ParamsMgr.PushParam(softwareVersion, system, PAC_SoftwareVersion, EPStore::NVS, "*");
 
   // we set to true to farce the value to be changed because some parameters are not settable!! 
   none.SetValue(1, true);
@@ -164,7 +164,7 @@ void test_ParamsMgr_GetChanges(void) {
 
   std::bitset<MAX_NUM_OF_PARAMS> bits;
   std::string changes;
-  mgr.GetChanges(changes, bits);
+  ParamsMgr.GetChanges(changes, bits);
 
   TEST_ASSERT_EQUAL_STRING("0,1\n1,1\n2,1\n3,1\n4,1\n", changes.c_str());
   TEST_ASSERT_EQUAL(true, bits.test(0));
@@ -173,7 +173,7 @@ void test_ParamsMgr_GetChanges(void) {
   TEST_ASSERT_EQUAL(true, bits.test(3));
   TEST_ASSERT_EQUAL(true, bits.test(4));
 
-  mgr.ClearChanges(bits);
+  ParamsMgr.ClearChanges(bits);
   TEST_ASSERT_EQUAL(false, bits.test(0));
   TEST_ASSERT_EQUAL(false, bits.test(1));
   TEST_ASSERT_EQUAL(false, bits.test(2));
