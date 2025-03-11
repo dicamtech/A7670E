@@ -12,9 +12,10 @@
 TSystem sys;
 
 void setup() {
-    Serial.begin(115200);
-    sys.Init();
+  Serial.begin(115200);
+  sys.Init();
 }
 
 void loop() { 
+  sys.Run();
 }
