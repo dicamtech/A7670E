@@ -2,6 +2,7 @@
 #include "../brooderApp/D2BrooderAlarm/src/common.h"
 #include "../brooderApp/D2BrooderAlarm/src/paramsmgr.h"
 #include "../brooderApp/D2BrooderAlarm/src/paramsmgr.cpp"
+#include "../brooderApp/D2BrooderAlarm/src/appmapmgr.cpp"
 #include "../brooderApp/D2ParamsGenerator/api/paramdescr.cpp"
 
 // Test that a unique alias is correctly assigned and fields are set.
@@ -180,7 +181,7 @@ void test_ParamsMgr_GetChanges(void) {
   TEST_ASSERT_EQUAL(false, bits.test(3));
   TEST_ASSERT_EQUAL(false, bits.test(4));
 
-  AppMapMgr.Dump("brooderApp/D2BrooderAlarm/appmapTest/appmap.csv");
+  AppMapMgr.Save("brooderApp/D2BrooderAlarm/appmapTest/testParamsMgr.csv");
 }
 
 
