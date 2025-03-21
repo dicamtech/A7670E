@@ -3,6 +3,8 @@
 #include "../brooderApp/D2BrooderAlarm/src/paramsmgr.h"
 #include "../brooderApp/D2BrooderAlarm/src/system.h"
 #include "../brooderApp/D2BrooderAlarm/src/system.cpp"
+#include "../brooderApp/D2BrooderAlarm/src/zone.h"
+#include "../brooderApp/D2BrooderAlarm/src/zone.cpp"
 
 const std::string sitespecdata = R"(!sitespec
 SysCtrl,255,System.SysCtrl.0,2
