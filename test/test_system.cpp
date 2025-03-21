@@ -26,6 +26,8 @@ void test_System_Build(void) {
 
   AppMapMgr.Load(TEST_APPMAP_CSV_FILE); // First we load appmap
   system.BuildSystemParams(); // Build core system parameters
+  system.BuildSiteParams(); // Build site parameters
+  system.BuildOtapParams(); // Build otap parameters
 
   auto sitespecs = ParamsMgr.ParseSiteSpec(sitespecdata);
   ParamsMgr.ApplySiteSpec(sitespecs);
@@ -39,7 +41,6 @@ void test_System_Build(void) {
   TEST_ASSERT_EQUAL(40, zones->size());
   auto ruuvitags = system.GetRuuviTags();
   TEST_ASSERT_EQUAL(60, ruuvitags->size());
-
 
 }
 
