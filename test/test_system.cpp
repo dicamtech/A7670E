@@ -23,6 +23,8 @@ const std::string sitespecdata = "!sitespec\n"
 
 
 #define TEST_APPMAP_CSV_FILE "brooderApp/D2BrooderAlarm/appmapTest/testSystem.csv"
+#define TEST_APPMAP_SAVE_LOAD "brooderApp/D2BrooderAlarm/appmapTest/testAppMapSaveLoad.csv"
+#define TEST_PARAMSMGR_SAVE_LOAD "brooderApp/D2BrooderAlarm/appmapTest/testParamsMgrSaveLoad.csv"
 
 // Test that a unique alias is correctly assigned and fields are set.
 void test_System_Build(void) {
@@ -103,17 +105,67 @@ void test_System_newparam_status(void) {
   auto newparamData = AppMapMgr.GetAppMapData(newparamPID); // Check that the data is correctly assigned
   TEST_ASSERT_NOT_NULL(newparamData);
   TEST_ASSERT_EQUAL_STRING("4", newparamData->status.c_str()); // should be new
-  AppMapMgr.Save(TEST_APPMAP_CSV_FILE, true);
 
+}
 
+void test_System_SaveLoad(void){
   AppMapMgr.Reset();
   ParamsMgr.Reset();
-  AppMapMgr.Load(TEST_APPMAP_CSV_FILE); // First we load appmap
-  newparamPID = AppMapMgr.Find(newparam.GetRef().ToString());
-  newparamData = AppMapMgr.GetAppMapData(newparamPID); // Check that the data is correctly assigned
-  TEST_ASSERT_EQUAL_STRING("1", newparamData->status.c_str()); // should be inactive
-  AppMapMgr.Save(TEST_APPMAP_CSV_FILE, true);
+  TParam<uint32_t> none(0);
+  TParam<uint32_t> sys(0);
+  TParam<uint32_t> site(0);
+  TParam<int> testInt(0);
+  TParam<std::string> testStr("Init Value");
 
+  AppMapMgr.Load(TEST_APPMAP_SAVE_LOAD); // First we load appmap
+  
+  auto buildParams = [&]() {
+    none = 0;
+    sys = 0;
+    site = 0;
+    testInt = 0;
+    testStr = "Init Value";
+    _PP(none, none, PAC_None, EPStore::RAM, "None");
+    _PP(sys, none, PAC_System, EPStore::RAM, "Sys");
+    _PP(site, sys, PAC_Site, EPStore::RAM, "Site");
+    _PP(testInt, sys, PAC_BitMap, EPStore::NVS, "TestInt");
+    _PP(testStr, sys, PAC_String, EPStore::NVS, "TestStr");
+  };
+
+  buildParams();
+
+  // generate random values
+  int randInt = random();
+  std::string randStr = "Random Value " + std::to_string(randInt);
+
+  testInt = randInt;
+  testStr = randStr;
+  none = randInt;
+  site = randInt;
+
+  AppMapMgr.Save(TEST_APPMAP_SAVE_LOAD, true);
+  ParamsMgr.SaveStorage(TEST_PARAMSMGR_SAVE_LOAD);
+
+  TEST_ASSERT_NOT_EQUAL(randInt, none.GetValue());  // none is read only, thus it cannot be signed a new value
+  TEST_ASSERT_EQUAL(0, sys.GetValue());
+  TEST_ASSERT_EQUAL(randInt, site.GetValue()); // site is RW thus it can be signed a new value
+  TEST_ASSERT_EQUAL(randInt, testInt.GetValue());
+  TEST_ASSERT_EQUAL_STRING(randStr.c_str(), testStr.GetValue().c_str());
+  TEST_ASSERT_EQUAL_STRING(std::to_string(randInt).c_str(), testInt.GetValAsStr().c_str());
+  TEST_ASSERT_EQUAL_STRING(randStr.c_str(), testStr.GetValAsStr().c_str());
+
+  // Reset and load the saved values
+  AppMapMgr.Reset();
+  ParamsMgr.Reset();
+  AppMapMgr.Load(TEST_APPMAP_SAVE_LOAD); // First we load appmap
+  buildParams();
+  ParamsMgr.LoadStorage(TEST_PARAMSMGR_SAVE_LOAD);
+
+  TEST_ASSERT_EQUAL(0, sys.GetValue());
+  TEST_ASSERT_NOT_EQUAL(randInt, site.GetValue()); 
+  TEST_ASSERT_EQUAL(0, site.GetValue()); // site is not saved, this should be 0
+  TEST_ASSERT_EQUAL(randInt, testInt.GetValue());
+  TEST_ASSERT_EQUAL_STRING(randStr.c_str(), testStr.GetValue().c_str());
 }
 
 //---------------------------------------------------------------------
@@ -123,4 +175,5 @@ void test_TSystem(void) {
   RUN_TEST(test_System_Build);
   RUN_TEST(test_System_No_OTAP);
   RUN_TEST(test_System_newparam_status);
+  RUN_TEST(test_System_SaveLoad);
 }
