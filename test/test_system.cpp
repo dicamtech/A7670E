@@ -56,6 +56,7 @@ void test_System_Build(void) {
 
 }
 
+// Test system behavior when OTAP parameters are not built.
 void test_System_No_OTAP(void) {
   AppMapMgr.Reset();
   ParamsMgr.Reset();
@@ -88,6 +89,7 @@ void test_System_No_OTAP(void) {
 
 }
 
+// Test that a newly added parameter has the correct status.
 void test_System_newparam_status(void) {
   AppMapMgr.Reset();
   ParamsMgr.Reset();
@@ -108,6 +110,7 @@ void test_System_newparam_status(void) {
 
 }
 
+// Test saving and loading parameter values.
 void test_System_SaveLoad(void){
   AppMapMgr.Reset();
   ParamsMgr.Reset();
