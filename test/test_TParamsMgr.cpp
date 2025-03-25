@@ -28,7 +28,7 @@ void test_ParamsMgr_UniqueAlias(void) {
   TEST_ASSERT_NOT_NULL(param.GetDescr());
   TEST_ASSERT_EQUAL_STRING("System", param.GetDescr()->Classname);
   // Verify that the manager reports one parameter.
-  TEST_ASSERT_EQUAL_INT(2, ParamsMgr.GetParamCount());
+  TEST_ASSERT_EQUAL_INT(2, ParamsMgr.GetNumOfActiveParams());
 }
 
 // Test that a duplicate alias is not assigned to the second parameter.
@@ -52,7 +52,7 @@ void test_ParamsMgr_SameAlias(void) {
   TEST_ASSERT_EQUAL_INT(2, param2.GetPID());
 
   // Verify that the manager now holds two parameters.
-  TEST_ASSERT_EQUAL_INT(3, ParamsMgr.GetParamCount());
+  TEST_ASSERT_EQUAL_INT(3, ParamsMgr.GetNumOfActiveParams());
 }
 
 // Test that a duplicate alias is not assigned to the second parameter.
@@ -81,7 +81,7 @@ void test_ParamsMgr_AutoIndexing(void) {
   TEST_ASSERT_EQUAL_INT(3, param3.GetPID());
 
   // Verify that the manager now holds two parameters.
-  TEST_ASSERT_EQUAL_INT(4, ParamsMgr.GetParamCount());
+  TEST_ASSERT_EQUAL_INT(4, ParamsMgr.GetNumOfActiveParams());
 }
 
 void test_ParamsMgr_AutoAliasing(void){
