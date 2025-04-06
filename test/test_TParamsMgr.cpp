@@ -18,7 +18,7 @@ void test_ParamsMgr_UniqueAlias(void) {
   // Verify that the parameter's pid is set to 0 (first parameter added).
   TEST_ASSERT_EQUAL_INT(1, param.GetPID());
   // Verify that the parameter's owner is set correctly.
-  TEST_ASSERT_EQUAL_INT(owner.GetPID(), param.GetOwner());
+  TEST_ASSERT_EQUAL_INT(owner.GetPID(), param.GetOwner()->GetPID());
   // Verify that pac and idx are set as expected.
   TEST_ASSERT_EQUAL_INT(PAC_System, param.GetPac());
   TEST_ASSERT_EQUAL_INT(0, param.GetIdx());
@@ -114,7 +114,7 @@ void test_ParamsMgr_InitParamPID(void){
 
   // The owner pid should be auto assigned to 0 
   TEST_ASSERT_EQUAL_INT(0, owner.GetPID());
-  TEST_ASSERT_EQUAL_INT(0, owner.GetOwner());
+  TEST_ASSERT_EQUAL_INT(0, owner.GetOwner()->GetPID());
   TEST_ASSERT_EQUAL_INT(0, owner.GetIdx());
 }
 
