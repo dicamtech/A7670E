@@ -5,6 +5,8 @@
 #include "../brooderApp/D2BrooderAlarm/src/system.cpp"
 #include "../brooderApp/D2BrooderAlarm/src/zone.h"
 #include "../brooderApp/D2BrooderAlarm/src/zone.cpp"
+#include "../brooderApp/D2BrooderAlarm/src/alarm.h"
+#include "../brooderApp/D2BrooderAlarm/src/alarm.cpp"
 
 static const int numZones = 50;
 static const int numRuuviTags = 10;
@@ -46,6 +48,7 @@ void test_System_Build(void) {
 
   system.BuildZoneParams(); // Build the zone params
   system.BuildRuuviTagParams(); // Build the ruuvi tag params
+  system.BuildUserParams(); // Build user parameters
 
   AppMapMgr.Save(TEST_APPMAP_CSV_FILE, true);
 
