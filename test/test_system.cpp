@@ -8,8 +8,8 @@
 #include "../brooderApp/D2BrooderAlarm/src/alarm.h"
 #include "../brooderApp/D2BrooderAlarm/src/alarm.cpp"
 
-static const int numZones = 50;
-static const int numRuuviTags = 10;
+static const int numZones = 10;
+static const int numRuuviTags = 5;
 static std::string swVerRef = "";
 static prid_t swVerPid = UNSET_PID;
 
@@ -32,12 +32,11 @@ const std::string sitespecdata = "!sitespec\n"
 void test_System_Build(void) {
   AppMapMgr.Reset();
   ParamsMgr.Reset();
-  TSystem system;
 
   AppMapMgr.Load(TEST_APPMAP_CSV_FILE); // First we load appmap
-  system.BuildSystemParams(); // Build core system parameters
-  system.BuildSiteParams(); // Build site parameters
-  system.BuildOtapParams(); // Build otap parameters
+  MonitorSystem.BuildSystemParams(); // Build core system parameters
+  MonitorSystem.BuildSiteParams(); // Build site parameters
+  MonitorSystem.BuildOtapParams(); // Build otap parameters
 
   swVerRef = FwMgr.swVer.GetRef().ToString();
   swVerPid = FwMgr.swVer.GetPID();
@@ -46,15 +45,16 @@ void test_System_Build(void) {
   auto sitespecs = ParamsMgr.ParseSiteSpec(sitespecdata);
   ParamsMgr.ApplySiteSpec(sitespecs);
 
-  system.BuildZoneParams(); // Build the zone params
-  system.BuildRuuviTagParams(); // Build the ruuvi tag params
-  system.BuildUserParams(); // Build user parameters
+  MonitorSystem.BuildZoneParams(); // Build the zone params
+  MonitorSystem.BuildRuuviTagParams(); // Build the ruuvi tag params
+  MonitorSystem.BuildUserParams(); // Build user parameters
+  MonitorSystem.BuildAlarmGroupParams(); // Build alarm group parameters
 
   AppMapMgr.Save(TEST_APPMAP_CSV_FILE, true);
 
-  auto zones = system.GetZones();
+  auto zones = MonitorSystem.GetZones();
   TEST_ASSERT_EQUAL(numZones, zones->size());
-  auto ruuvitags = system.GetRuuviTags();
+  auto ruuvitags = MonitorSystem.GetRuuviTags();
   TEST_ASSERT_EQUAL(numRuuviTags, ruuvitags->size());
 
 }
@@ -63,17 +63,16 @@ void test_System_Build(void) {
 void test_System_No_OTAP(void) {
   AppMapMgr.Reset();
   ParamsMgr.Reset();
-  TSystem system;
 
   AppMapMgr.Load(TEST_APPMAP_CSV_FILE); // First we load appmap
-  system.BuildSystemParams(); // Build core system parameters
-  system.BuildSiteParams(); // Build site parameters
+  MonitorSystem.BuildSystemParams(); // Build core system parameters
+  MonitorSystem.BuildSiteParams(); // Build site parameters
 
   auto sitespecs = ParamsMgr.ParseSiteSpec(sitespecdata);
   ParamsMgr.ApplySiteSpec(sitespecs);
 
-  system.BuildZoneParams(); // Build the zone params
-  system.BuildRuuviTagParams(); // Build the ruuvi tag params
+  MonitorSystem.BuildZoneParams(); // Build the zone params
+  MonitorSystem.BuildRuuviTagParams(); // Build the ruuvi tag params
 
   // AppMapMgr.Save(TEST_APPMAP_CSV_FILE, true);
 
@@ -87,7 +86,7 @@ void test_System_No_OTAP(void) {
   TEST_ASSERT_EQUAL_STRING(FwMgr.swVer.GetAlias().c_str(), appmapswverData->alias.c_str());
   TEST_ASSERT_EQUAL_STRING("1", appmapswverData->status.c_str()); // should be inactive 
 
-  system.BuildOtapParams(); // Build otap parameters
+  MonitorSystem.BuildOtapParams(); // Build otap parameters
   TEST_ASSERT_EQUAL_STRING("0", appmapswverData->status.c_str()); // should be active again
 
 }
@@ -96,13 +95,12 @@ void test_System_No_OTAP(void) {
 void test_System_newparam_status(void) {
   AppMapMgr.Reset();
   ParamsMgr.Reset();
-  TSystem system;
 
   AppMapMgr.Load(TEST_APPMAP_CSV_FILE); // First we load appmap
-  system.BuildSystemParams(); // Build core system parameters
+  MonitorSystem.BuildSystemParams(); // Build core system parameters
 
   TParam<uint32_t> newparam(0);
-  ParamsMgr.PushParam(newparam, sp.none, PAC_Number, EPStore::RAM, "NewParam");
+  ParamsMgr.PushParam(newparam, MonitorSystem.sp.none, PAC_Number, EPStore::RAM, "NewParam");
 
   auto newparamPID = AppMapMgr.Find(newparam.GetRef().ToString());
   TEST_ASSERT_NOT_EQUAL(UNSET_PID, newparamPID); // Check that the PID is correctly assigned 

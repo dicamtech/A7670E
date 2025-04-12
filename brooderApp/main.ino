@@ -9,13 +9,11 @@
 
 #include "D2BrooderAlarm/src/system.h"
 
-TSystem sys;
-
 void setup() {
   Serial.begin(115200);
-  sys.Init();
+  MonitorSystem.Init();
 }
 
 void loop() { 
-  sys.Run();
+  MonitorSystem.Run();
 }
