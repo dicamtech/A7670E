@@ -81,7 +81,6 @@ void loop()
 {
     while (SerialGPS.available()) {
         int c = SerialGPS.read();
-        // Serial.write(c);     // Debug gps nmae message output to serial
         if (gps.encode(c)) {
             displayInfo();
         }
