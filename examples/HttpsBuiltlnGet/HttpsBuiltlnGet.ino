@@ -34,7 +34,18 @@ const char *request_url[] = {
     "https://httpbin.org/get",
     "https://vsh.pp.ua/TinyGSM/logo.txt",
     "https://ipapi.co/timezone",         // Access may be blocked by a firewall
-    "http://ip-api.com/json/23.158.104.183"
+    "http://ip-api.com/json/23.158.104.183",
+    "https://ikfu.azurewebsites.net/api/GetUtcTime"  // https://github.com/Xinyuan-LilyGO/LilyGO-T-A76XX/issues/243
+};
+
+// ISSUES ： https://github.com/Xinyuan-LilyGO/LilyGO-T-A76XX/issues/243
+// Azure server does not support automatic negotiation of SSL protocol and needs to be configured as SSL1.2
+ServerSSLVersion sslVersion[] = {
+    TINYGSM_SSL_AUTO,   // httpbin.org
+    TINYGSM_SSL_AUTO,   // vsh.pp.ua
+    TINYGSM_SSL_AUTO,   // ipapi.co
+    TINYGSM_SSL_AUTO,   // ip-api.com
+    TINYGSM_SSL_TLS1_2  // azure
 };
 
 void setup()
@@ -51,10 +62,12 @@ void setup()
 #endif
 
     // Set modem reset pin ,reset modem
+#ifdef MODEM_RESET_PIN
     pinMode(MODEM_RESET_PIN, OUTPUT);
     digitalWrite(MODEM_RESET_PIN, !MODEM_RESET_LEVEL); delay(100);
     digitalWrite(MODEM_RESET_PIN, MODEM_RESET_LEVEL); delay(2600);
     digitalWrite(MODEM_RESET_PIN, !MODEM_RESET_LEVEL);
+#endif
 
     pinMode(BOARD_PWRKEY_PIN, OUTPUT);
     digitalWrite(BOARD_PWRKEY_PIN, LOW);
@@ -182,7 +195,7 @@ void setup()
             Serial.println(request_url[i]);
 
             // Set GET URT
-            if (!modem.https_set_url(request_url[i])) {
+            if (!modem.https_set_url(request_url[i], sslVersion[i])) {
                 Serial.print("Failed to request : "); Serial.println(request_url[i]);
 
                 // Debug
