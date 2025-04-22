@@ -18,10 +18,10 @@ const std::string sitespecdata = "!sitespec\n"
     "None,,None.None.0,0\n"
     "System,,None.System.0,0\n"
     "Site,,System.Site.0,2\n"
-    "SiteOptions1,0,System.SiteOptions.0,2\n"
-    "NumZones," + std::to_string(numZones) + ",System.SiteOptions.1,2\n"
-    "NumRuuviTags," + std::to_string(numRuuviTags) + ",System.SiteOptions.2,2\n"
-    "NumUsers,10,System.SiteOptions.3,2";
+    "SiteOptions,0,System.SiteOptions.0,2\n"
+    "NumZones," + std::to_string(numZones) + ",SiteOptions.Number.0,2\n"
+    "NumRuuviTags," + std::to_string(numRuuviTags) + ",SiteOptions.Number.1,2\n"
+    "NumUsers,10,SiteOptions.Number.2,2";
 
 
 #define TEST_APPMAP_CSV_FILE "brooderApp/D2BrooderAlarm/appmapTest/testSystem.csv"

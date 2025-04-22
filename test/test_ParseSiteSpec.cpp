@@ -27,36 +27,33 @@ void test_ParseSiteSpec_WithValidInput(void) {
   ParamsMgr.PushParam(system, none, PAC_System, EPStore::NVS, "System");
   
   const std::string input = R"(!sitespec
-  SysCtrl,255,System.SysCtrl.0,2
+  SysCtrl,255,System.SystemControl.0,2
   None,,None.None.0,0
   System,,None.System.0,0
   Site,,System.Site.0,2
-  SiteOptions1,0,System.SiteOptions.0,2
-  NumZones,40,System.SiteOptions.1,2
-  NumRuuviTags,60,System.SiteOptions.2,2
-  NumUsers,10,System.SiteOptions.3,2)";
+  SiteOptions,0,System.SiteOptions.0,2
+  NumZones,40,SiteOptions.Number.0,2
+  NumRuuviTags,60,SiteOptions.Number.1,2
+  NumUsers,10,SiteOptions.Number.2,2)";
   
   std::vector<TSiteSpec> specs = ParamsMgr.ParseSiteSpec(input);
   TEST_ASSERT_EQUAL(8, (int)specs.size());
   
   // Validate first spec: "SysCtrl,255,System.SysCtrl.0,2"
-  TEST_ASSERT_EQUAL_STRING("SysCtrl", specs[0].ref.strVal.c_str());
+  TEST_ASSERT_EQUAL_STRING("SysCtrl", specs[0].alias.c_str());
   TEST_ASSERT_EQUAL(255, specs[0].value);
-  TEST_ASSERT_EQUAL_STRING("System", specs[0].pid_alias.c_str());
-  TEST_ASSERT_EQUAL_STRING("SysCtrl", specs[0].classname.c_str());
-  
-  // Validate that system's alias ("System") matches the parsed pid_alias.
-  TEST_ASSERT_EQUAL_STRING(system.GetAlias().c_str(), specs[0].pid_alias.c_str());
-  
+  TEST_ASSERT_EQUAL(PAC_SystemControl, specs[0].ref.pac);
+  TEST_ASSERT_EQUAL(system.GetPID(), specs[0].ref.owner);
+    
   // Verify that mgr.Find returns the same id as system's id.
-  auto pid = ParamsMgr.FindPidFromAlias(specs[0].pid_alias);
-  TEST_ASSERT_EQUAL(system.GetPID(), pid);
+  auto pid = ParamsMgr.FindPidFromAlias(specs[0].alias);
+  TEST_ASSERT_EQUAL(UNSET_PID, pid);
   
   // Verify that the second spec ("None,,None.None.0,0") has a matching reference.
   TEST_ASSERT_TRUE(none.GetRef() == specs[1].ref);
 
   //System,,None.System.0,0
-  TEST_ASSERT_EQUAL_STRING(system.GetAlias().c_str(), specs[2].ref.strVal.c_str());
+  TEST_ASSERT_EQUAL_STRING(system.GetAlias().c_str(), specs[2].alias.c_str());
   TEST_ASSERT_EQUAL(0, specs[2].value);
   TEST_ASSERT_EQUAL(0, specs[2].status);
   TEST_ASSERT_TRUE(system.GetRef() == specs[2].ref);
@@ -124,10 +121,8 @@ void test_ParseSiteSpec_WithInvalidFormat(void) {
   // Only one valid line ("Proper,123,Valid.Format.0,1") should be processed.
   TEST_ASSERT_EQUAL(1, (int)specs.size());
   
-  TEST_ASSERT_EQUAL_STRING("Proper", specs[0].ref.strVal.c_str());
+  TEST_ASSERT_EQUAL_STRING("Proper", specs[0].alias.c_str());
   TEST_ASSERT_EQUAL(123, specs[0].value);
-  TEST_ASSERT_EQUAL_STRING("Valid", specs[0].pid_alias.c_str());
-  TEST_ASSERT_EQUAL_STRING("Format", specs[0].classname.c_str());
   TEST_ASSERT_EQUAL(1, specs[0].status);
 }
 
@@ -163,10 +158,9 @@ void test_ParseSiteSpec_WithWhitespace(void) {
   auto specs = ParamsMgr.ParseSiteSpec(input);
   TEST_ASSERT_EQUAL(1, (int)specs.size());
   
-  TEST_ASSERT_EQUAL_STRING("Dummy", specs[0].ref.strVal.c_str());
+  TEST_ASSERT_EQUAL_STRING("Dummy", specs[0].alias.c_str());
   TEST_ASSERT_EQUAL(100, specs[0].value);
-  TEST_ASSERT_EQUAL_STRING("None", specs[0].pid_alias.c_str());
-  TEST_ASSERT_EQUAL_STRING("None", specs[0].classname.c_str());
+  TEST_ASSERT_EQUAL(PAC_None, specs[0].ref.pac);
   TEST_ASSERT_EQUAL(2, specs[0].status);
 }
 
