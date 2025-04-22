@@ -18,7 +18,6 @@
   2. T-A7608-V2 Remove power on pin (IO12)
   3. Add onboard LED (IO12)
   4. Add solar voltage ADC(IO34) detection function
-- **A7670E-LNXY-UBL** this version does not support voice and SMS functions.
 
 # 1️⃣Product
 
@@ -37,16 +36,16 @@
 
 [1]: https://www.lilygo.cc/products/t-sim-a7670eZ
 [2]: https://www.lilygo.cc/products/t-call-v1-4
-[3]: https://lilygo.cc/products/t-a7608e-h?variant=42860532433077
+<!-- [3]: https://www.lilygo.cc/products/t-call-v1-4 -->
 [4]: https://www.lilygo.cc/products/t-a7608e-h
-[5]: https://lilygo.cc/products/t-a7608e-h
+<!-- [5]: https://www.lilygo.cc -->
 [6]: https://lilygo.cc/products/t-a7608e-h?variant=43932699033781
 [7]: https://www.lilygo.cc/products/t-sim-7670g-s3
 [8]: https://lilygo.cc/products/a-t-pcie?variant=42335922094261
 
 ## 2️⃣Examples
 
-| Example                         | [T-A7670X][1]     | [T-Call-A7670X][2] | [T-SIM767XG-S3][6] | [T-A7608][3]    | [T-PCIE-A767X][8] | [T-A7608-S3][5] |
+| Example                         | [T-A7670X][1]     | [T-Call-A7670X][2] | [T-SIM767XG-S3][6] | [T-A7608/V2][3] | [T-PCIE-A767X][8] | [T-A7608-S3][5] |
 | ------------------------------- | ----------------- | ------------------ | ------------------ | --------------- | ----------------- | --------------- |
 | ATdebug                         | ✅                 | ✅                  | ✅                  | ✅               | ✅                 | ✅               |
 | Blynk_Console                   | ✅                 | ✅                  | ✅                  | ✅               | ✅                 | ✅               |
@@ -94,7 +93,6 @@
 | SimHatOneWireSensor[3]          | ✅                 | ❌                  | ❌(No support)[2]   | ✅               | ❌                 | ✅               |
 | SimHatRelay[3]                  | ✅                 | ❌                  | ❌(No support)[2]   | ✅               | ❌                 | ✅               |
 | ULP_Monitor                     | ✅                 | ✅                  | ❌                  | ✅               | ✅                 | ❌               |
-| Traccar(Modern GPS Tracking)    | ✅                 | ✅                  | ✅                  | ✅               | ✅                 | ✅               |
 
 - HP303BSensor,SPIExample it only demonstrates how to define and use SPI and I2C. Please confirm the pin connection and IO definition before use.
 - [1] T-A7608-ESP32 Conflict with Solar ADC
@@ -139,11 +137,9 @@
     | --------------------------------------------------------------- | ------------------------------------ |
     | ![esp32dev](images/esp32dev.jpg)                                | ![esp32s3dev](images/esp32s3dev.jpg) |
 6. `LilyGO-T-A76XX` folder -> `examples` -> `Choose the appropriate example from the list above`
-7. Open the corresponding board macro definition above [utilities.h](./examples/ATdebug/utilities.h) , For example, if you use LILYGO-A7670X, you need to change ` // #define LILYGO_T_A7670` to ` #define LILYGO_T_A7670`
-   ![](./images/board_select.jpg)
-
+7. Open the corresponding board macro definition above [utilities.h](./examples/ATdebug/utilities.h)
 8. Connect the board to the computer USB-C , Micro-USB is used for module firmware upgrade
-9.  Select `Port`
+9. Select `Port`
 10. Click `upload` , Wait for compilation and writing to complete
 11. If it cannot be written, or the USB device keeps flashing, please check the **FAQ** below
 
@@ -175,7 +171,7 @@
 
 - **GPS not working?**
    1. See [issue#137](https://github.com/Xinyuan-LilyGO/LilyGO-T-A76XX/issues/137)
-
+   
 - **VOLTE FAQ**
   1. See [issues/115](https://github.com/Xinyuan-LilyGO/LilyGO-T-A76XX/issues/115)
 
@@ -186,11 +182,6 @@
    4. Release the RST button
    5. Release the BOOT button (If there is no BOOT button, disconnect IO0 from GND.)
    6. Upload sketch
-- **If the above method still fails to upload the sketch, please follow the method below to test whether the USB2TTL communication is normal.**
-  1. Connect USB-C to PC
-  2. Open the serial monitor and adjust the baud rate to 115200
-  3. Press the RST button on the board to restart
-  4. If you can see the startup information, it means that the USB2TTL communication is normal. If nothing is displayed in the serial monitor, it may be that the USB2TTL bridge is damaged.
 - **Upgrade modem firmware**
    1. [T-A76XX Upgrade docs](./docs/update_fw.md) / [Video](https://youtu.be/AZkm-Z7mKn8)
    2. [SIM7670G Upgrade issue](https://github.com/Xinyuan-LilyGO/LilyGO-T-A76XX/issues/122) / [Video](https://www.youtube.com/watch?v=fAtrz_4DfVs)
@@ -257,11 +248,11 @@
    - [A76xx Sleep Application](./datasheet/A76XX/A76XX%20Series_Sleep%20Mode_Application%20Note_V1.02.pdf)
    - [A76xx Hardware Design manual](./datasheet/A76XX/A7670C_R2_硬件设计手册_V1.06.pdf)
    - [A76xx TCPIP Application](./datasheet/A76XX/A76XX%20Series_TCPIP_Application%20Note_V1.02.pdf)
-3. SIM7670G-Datasheet
-   - [SIM7670G Hardware Design manual](./datasheet/SIM767X/SIM7672X_Series_Hardware_Design_V1.02.pdf)
-   - [SIM7670G AT Command](./datasheet/SIM767X/SIM767XX%20Series_AT_Command_Manual_V1.06.pdf)
-   - [SIM7670G CE Certificate](./datasheet/SIM767X/SIM7670G_CE%20Certificate_2023.pdf)
-   - [SIM7670G Series CMUX USER GUIDE](./datasheet/SIM767X/SIM767XX%20Series_CMUX_USER_GUIDE_V1.00.pdf)
+3. SIM767XG-Datasheet
+   - [SIM7672 Hardware Design manual](./datasheet/SIM767X/SIM7672X_Series_Hardware_Design_V1.02.pdf)
+   - [SIM7672 AT Command](./datasheet/SIM767X/SIM767XX%20Series_AT_Command_Manual_V1.06.pdf)
+   - [SIM7672 CE Certificate](./datasheet/SIM767X/SIM7670G_CE%20Certificate_2023.pdf)
+   - [SIM7672 Series CMUX USER GUIDE](./datasheet/SIM767X/SIM767XX%20Series_CMUX_USER_GUIDE_V1.00.pdf)
 4. Schematic
    - [T-A7608-S3 Schematic](./schematic/T-A7608-S3-V1.0.pdf)
    - [T-A7608X-DC-S3 Schematic](./schematic/T-A7608X-DC-S3-V1.0.pdf)
@@ -269,14 +260,14 @@
    - [T-A7608X-V2 Schematic](./schematic/A7608-ESP32-V2.pdf)
    - [T-A7670X Schematic](./schematic/T-A7670X-V1.1.pdf)
    - [T-Call-A7670 Schematic](./schematic/T-Call-A7670-V1.0.pdf)
-   - [T-SIM7670G-S3 Schematic](./schematic/T-SIM7670G-S3-V1.0.pdf)
+   - [T-SIM7672-S3 Schematic](./schematic/T-SIM767X-S3-V1.0.pdf)
 5. Dimensions
    - [T-A7608-S3 DWG](./dimensions/T-A7608-S3-V1.0.dwg)
    - [T-A7608X-DC-S3 DWG](./dimensions/T-A7608X-DC-S3-V1.0.dwg)
    - [T-A7608X DWG](./dimensions/T-A7608X-V1.0.dwg)
    - [T-A7670X DWG](./dimensions/T-A7670X-V1.1.dwg)
    - [T-Call-A7670 DWG](./dimensions/T-Call-A7670-V1.0.dwg)
-   - [T-SIM7672-S3 DWG](./dimensions/T-SIM7670G-S3-V1.0.dwg)
+   - [T-SIM7672-S3 DWG](./dimensions/T-SIM7672-S3-V1.0.dwg)
 
 
 
