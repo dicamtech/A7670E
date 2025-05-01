@@ -148,7 +148,7 @@ class TinyGsmSMS {
     thisModem().stream.print(text);  // Actually send the message
     thisModem().stream.write(static_cast<char>(0x1A));  // Terminate the message
     thisModem().stream.flush();
-    return thisModem().waitResponse(60000L) == 1;
+    return thisModem().waitResponse(10000L) == 1;
   }
 
   // Common methods for UTF8/UTF16 SMS.
