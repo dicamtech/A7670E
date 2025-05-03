@@ -5,6 +5,7 @@ extern void test_TParamsMgr();
 extern void test_SiteSpec();
 extern void test_TParam();
 extern void test_TSystem();
+extern void test_TRuuviTagData();
 
 #ifdef UNIT_TEST
 int main(void) {
@@ -13,6 +14,7 @@ int main(void) {
   test_TParamsMgr();  // Call tests defined in test_TParamsMgr.cpp
   test_SiteSpec();
   test_TSystem();
+  test_TRuuviTagData();
   return UNITY_END();
 }
 #endif
